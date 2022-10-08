@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class EventManager {
 
-    private Map<Method, Object> listenerMap = Collections.synchronizedMap(new LinkedHashMap<>());
+    private final Map<Method, Object> listenerMap = Collections.synchronizedMap(new LinkedHashMap<>());
 
     public void registerListener(Object listener) {
         for (Method method : listener.getClass().getMethods()) {
@@ -28,8 +28,7 @@ public class EventManager {
 
     public void callListener(Event event) {
         List<EventPriority> orderedPriorities = Arrays.stream(EventPriority.values())
-                .filter(priority -> priority.getPriority() <= priority.getPriority())
-                .collect(Collectors.toList());
+                .filter(priority -> priority.getPriority() <= priority.getPriority()).toList();
         for (EventPriority priority : orderedPriorities) {
             if (priority == EventPriority.HIGHEST) {
                 invokeListener(event);
